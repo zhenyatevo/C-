@@ -1,0 +1,131 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main()
+{
+	string regexp;
+	vector<string> words;
+	getline(cin, regexp);
+	//std::cout « regexp;
+	int i = 0;
+	while (i < regexp.size()) {
+		if (regexp.substr(i + 1, 1) == "*") {
+			words.push_back(regexp.substr(i, 2));
+			i = i + 2;
+		}
+		else {
+			words.push_back(regexp.substr(i, 1));
+			i++;
+		}
+	}
+
+	for (auto c : words) {
+		cout << c << " ";
+	}
+	cout << endl;
+
+	/*ndFSM
+	std::vector<std::vector<std::pair<int, char>>> ndFSM;
+	//std::vector<std::pair<int, int>> states;
+	std::vector<std::pair<int, char>> x;
+	ndFSM[0].push_back(std::make_pair(1, 'a'));
+	for (auto x : ndFSM) {
+		for (int c = 0; c < ndFSM[x].size();) {
+		}
+	}
+
+	*/
+	vector<int> state1;
+	vector<string> step;
+	vector<int> state2;
+	int k = 0;
+	state1.push_back(k);
+	step.push_back("_");
+	state2.push_back(state1[k]+1);
+	k += 1;
+	//cout << state1[0] << ' '<< step[0] << ' '<< state2[0] <<endl;
+	for (int j = 0; j < words.size(); j++) {
+		
+		if (words[j].size() == 1 ) { //тут строки из 1 символа
+			if (j!= words.size()-1) {//для не последнего эл-та
+				state1.push_back(k);
+				step.push_back(words[j]);
+				state2.push_back(state1[k] + 1);
+				k += 1;
+				state1.push_back(k);
+				step.push_back("_");
+				state2.push_back(state1[k] + 1);
+				k += 1;
+			}
+			else { //для последнего эл-та
+				state1.push_back(k);
+				step.push_back(words[j]);
+				state2.push_back(k + 1);
+			
+			}
+		
+		}
+		else { // тут строки из двух символов, т. е. со *
+			if (j != words.size() - 1) {//для не последнего эл-та
+				state1.push_back(k);//переход по *
+				step.push_back(words[j].substr(0, 1));
+				state2.push_back(k);
+
+				state1.push_back(k+1);//переход из след сост в одно до
+				step.push_back("_");
+				state2.push_back(k-1);
+
+				state1.push_back(k - 1);//переход из след сост в одно до
+				step.push_back("_");
+				state2.push_back(k+1);
+				
+			    // 2 пустых перехода вперёд
+				state1.push_back(k);
+				step.push_back("_");
+				state2.push_back(k+1);
+				k += 1;
+				state1.push_back(k);
+				step.push_back("_");
+				state2.push_back(k + 1);				
+				k += 1;
+
+			}
+			else {//для последнего элемента
+				state1.push_back(k);//переход по *
+				step.push_back(words[j].substr(0, 1));
+				state2.push_back(k);
+
+				state1.push_back(k + 1);//переход из след сост в одно до
+				step.push_back("_");
+				state2.push_back(k-1);
+
+				state1.push_back(k - 1);//переход из след сост в одно до
+				step.push_back("_");
+				state2.push_back(k+1);
+
+				// 2 пустых переход вперёд, кот будет в закл сост-е
+				state1.push_back(k);
+				step.push_back("_");
+				state2.push_back(k + 1);
+				k += 1;
+				state1.push_back(k);
+				step.push_back("_");
+				state2.push_back(k + 1);
+			
+			
+			}
+		
+		
+		}
+	
+	
+	
+	}
+	for (int i = 0; i < state1.size(); i++) {
+		cout << state1[i] << ' ' << step[i] << ' ' << state2[i] << endl;
+
+	}
+	
+}
