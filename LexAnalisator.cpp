@@ -270,11 +270,7 @@ int Lexer(char c, char nc, bool &flag, bool &errorF, int &i, vector<char> &signs
 
 
 		break;
-	case '#': //это если пустой ввод
-		if (nc == '#') {
-			break;
-		}
-		break;
+	
 	
 
 
@@ -296,10 +292,12 @@ int main(){
 	//string message;
 	
 	while (cin.get(c)) { //создаю вектор символов входной строки для дальнейшей работы
-		if (c == '\n') {
+		if (c == '#') {  // тут # - символ конца ввода
 			break;
 		}
-		else {
+		else if(c == '\n') { //игнорируем \n и продолжаем считывание
+		}
+		else {          // считвание входных символов
 			signs.push_back(c);
 		}
 	}
@@ -322,6 +320,7 @@ int main(){
 			break;
 		}
 	}
+	cout << "eof";
 
 }
 
